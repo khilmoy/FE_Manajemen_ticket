@@ -21,25 +21,25 @@
             <!-- Slides -->
             <div class="relative h-[400px]">
 
-                <div
-                    class="carousel-slide absolute inset-0 flex items-center justify-center bg-linear-to-r from-primary-500 to-primary-700">
-                    <h1 class="text-4xl md:text-5xl font-bold text-white">
-                        Banner Event 1
-                    </h1>
+                <div class="carousel-slide absolute inset-0">
+                    <img src="{{ asset('assets/images/banner/dewa19.png') }}" alt="Dewa 19"
+                        class="w-full h-full object-cover">
+
+                    <div class="absolute inset-0 bg-black/40"></div>
                 </div>
 
-                <div
-                    class="carousel-slide absolute inset-0 hidden flex items-center justify-center bg-linear-to-r  from-primary-500 to-primary-700">
-                    <h1 class="text-4xl md:text-5xl font-bold text-white">
-                        Banner Event 2
-                    </h1>
+                <div class="carousel-slide absolute inset-0 hidden">
+                    <img src="{{ asset('assets/images/banner/hindia.png') }}" alt="Hindia"
+                        class="w-full h-full object-cover">
+
+                    <div class="absolute inset-0 bg-black/40"></div>
                 </div>
 
-                <div
-                    class="carousel-slide absolute inset-0 hidden flex items-center justify-center bg-linear-to-r  from-primary-500 to-primary-700"">
-                    <h1 class="text-4xl md:text-5xl font-bold text-white">
-                        Banner Event 3
-                    </h1>
+                <div class="carousel-slide absolute inset-0 hidden">
+                    <img src="{{ asset('assets/images/banner/salpriadi.png') }}" alt="Sal Priadi"
+                        class="w-full h-full object-cover">
+
+                    <div class="absolute inset-0 bg-black/40"></div>
                 </div>
 
             </div>
@@ -136,11 +136,10 @@
 
                     <!-- Placeholder Image -->
 
-                    <div class="h-48 bg-primary-50 border-b border-primary-100 flex items-center justify-center">
+                    <div class="h-48 border-b border-primary-100 overflow-hidden">
 
-                        <span class="text-primary-300 font-medium">
-                            Gambar Event
-                        </span>
+                        <img src="{{ asset('assets/images/banner/dewa19.png') }}" alt="Event"
+                            class="w-full h-full object-cover">
 
                     </div>
 
@@ -156,7 +155,7 @@
                         </span>
 
                         <h3 class="mt-4 text-lg font-bold text-gray-800">
-                            Konser Musik Indonesia {{ $i }}
+                            Dewa 19 
                         </h3>
 
                         <div class="mt-4 space-y-2 text-sm text-gray-500">
@@ -165,7 +164,7 @@
 
                                 <span>📍</span>
 
-                                <span>Jakarta Selatan</span>
+                                <span>Surabaya</span>
 
                             </div>
 
@@ -173,13 +172,13 @@
 
                                 <span>📅</span>
 
-                                <span>28 Juli 2026</span>
+                                <span>17 November 2024</span>
 
                             </div>
 
                             <div class="flex items-center gap-2">
                                 🕖
-                                <span>19.00 WIB</span>
+                                <span>21.00 WIB</span>
                             </div>
 
                         </div>

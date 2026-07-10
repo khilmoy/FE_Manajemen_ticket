@@ -65,7 +65,10 @@
 
                 </div>
 
-                <form class="mt-8 space-y-6">
+                <!-- Alert error -->
+                <div id="alertError" class="hidden mb-4 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600"></div>
+
+                <form id="loginForm" class="mt-8 space-y-6">
 
                     <!-- Email -->
                     <div>
@@ -74,7 +77,7 @@
                             Email
                         </label>
 
-                        <input type="email" placeholder="Masukkan email"
+                        <input type="email" name="email" required placeholder="Masukkan email"
                             class="w-full rounded-xl border border-gray-300 focus:border-primary-600 focus:ring-2 focus:ring-primary-200 px-4 py-3 outline-none transition">
 
                     </div>
@@ -86,14 +89,14 @@
                             Password
                         </label>
 
-                        <input type="password" placeholder="Masukkan password"
+                        <input type="password" name="password" required placeholder="Masukkan password"
                             class="w-full rounded-xl border border-gray-300 focus:border-primary-600 focus:ring-2 focus:ring-primary-200 px-4 py-3 outline-none transition">
 
                     </div>
 
                     <!-- Button -->
-                    <button type="submit"
-                        class="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 rounded-xl transition">
+                    <button type="submit" id="loginButton"
+                        class="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 rounded-xl transition disabled:opacity-60 disabled:cursor-not-allowed">
 
                         Login
 
@@ -145,6 +148,62 @@
         </div>
 
     </div>
+
+    <script>
+        const API_URL = '{{ config('global.api_url', 'http://localhost:8001/api') }}';
+
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const button = document.getElementById('loginButton');
+            const alertBox = document.getElementById('alertError');
+
+            const email = this.email.value.trim();
+            const password = this.password.value;
+
+            alertBox.classList.add('hidden');
+            alertBox.textContent = '';
+
+            button.disabled = true;
+            button.textContent = 'Memproses...';
+
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password }),
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    const message = data.errors
+                        ? Object.values(data.errors).flat().join(' ')
+                        : (data.message || 'Login gagal. Periksa kembali email dan password.');
+
+                    alertBox.textContent = message;
+                    alertBox.classList.remove('hidden');
+                    return;
+                }
+
+                // Simpan token & data user untuk request selanjutnya
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+
+                window.location.href = '{{ url('/detail') }}';
+
+            } catch (err) {
+                alertBox.textContent = 'Tidak bisa terhubung ke server. Coba lagi.';
+                alertBox.classList.remove('hidden');
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Login';
+            }
+        });
+    </script>
 
 </body>
 

@@ -1,7 +1,10 @@
 <?php
 
+<<<<<<< HEAD
 use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\ProfileController;
+=======
+>>>>>>> c1e4de6c858c7a7f63bf57f380beac374462f266
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,10 +27,19 @@ Route::get('/beli-ticket', function () {
     return view('ticket.payment');
 })->name('ticket.payment');
 
-Route::get('admin', function () {
+Route::get('/invoice', function () {
+    return view('ticket.invoice');
+})->name('ticket.invoice');
+
+Route::get('/e-ticket', function () {
+    return view('ticket.e-ticket');
+})->name('ticket.e-ticket');
+
+Route::get('/admin', function () {
     return view('admin.dashboard');
 })->name('admin.dashboard');
 
+<<<<<<< HEAD
 // Route::get('admin/kategori', function () {
 //     return view('admin.kategori');
 // })->name('admin.kategori');
@@ -51,3 +63,16 @@ Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('k
 
 
 require __DIR__.'/auth.php';
+=======
+Route::get('/admin/kategori', function () {
+    return view('admin.kategori');
+})->name('admin.kategori');
+
+Route::get('/admin/kategori/create', function () {
+    return view('admin.kategori.create');
+})->name('admin.kategori.create');
+
+Route::get('/admin/kategori/{id}/update', function ($id) {
+    return view('admin.kategori.update', ['id' => $id]);
+})->name('admin.kategori.update');
+>>>>>>> c1e4de6c858c7a7f63bf57f380beac374462f266
