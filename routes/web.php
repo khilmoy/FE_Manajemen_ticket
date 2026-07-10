@@ -24,7 +24,20 @@ Route::get('/beli-ticket', function () {
 })->name('ticket.payment');
 
 Route::get('admin', function () {
-    return view('admin.index');
-})->name('admin.index');
+    return view('admin.dashboard');
+})->name('admin.dashboard');
+
+Route::get('admin/kategori', function () {
+    return view('admin.kategori');
+})->name('admin.kategori');
+
+Route::get('admin/kategori/create', function () {
+    return view('admin.kategori.create');
+})->name('admin.kategori.create');
+
+Route::get('admin/kategori/{id}/update', function ($id) {
+    return view('admin.kategori.update', ['id' => $id]);
+})->name('admin.kategori.update');
+
 
 require __DIR__.'/auth.php';
