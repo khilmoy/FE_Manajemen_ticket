@@ -18,12 +18,12 @@
 
 
         <!-- Banner -->
-        <div
-            class="h-[420px] rounded-3xl shadow-xl flex items-center justify-center bg-primary-50 border border-primary-100">
+        <div class="h-[420px] rounded-3xl shadow-xl overflow-hidden relative border border-primary-100">
 
-            <span class="text-primary-500 font-medium text-xl">
-                Gambar Event
-            </span>
+            <img src="{{ asset('assets/images/banner/dewa19.png') }}" alt="Dewa 19" class="w-full h-full object-cover">
+
+            <!-- Overlay -->
+            <div class="absolute inset-0 bg-black/40"></div>
 
         </div>
 
@@ -43,7 +43,7 @@
 
 
                 <h1 class="text-4xl font-bold mt-4 text-gray-800">
-                    Konser Musik Indonesia 1
+                    Dewa 19
                 </h1>
 
 
@@ -52,19 +52,19 @@
 
                     <div class="flex items-center gap-2">
                         📅
-                        <span>28 Juli 2026</span>
+                        <span>17 November 2024</span>
                     </div>
 
 
                     <div class="flex items-center gap-2">
                         🕖
-                        <span>19.00 WIB</span>
+                        <span>21.00 WIB</span>
                     </div>
 
 
                     <div class="flex items-center gap-2">
                         📍
-                        <span>Jakarta Selatan</span>
+                        <span>Surabaya</span>
                     </div>
 
                 </div>
@@ -81,9 +81,10 @@
 
                     <p class="leading-8 text-gray-600">
 
-                        Konser Musik Indonesia 1 kembali hadir dengan konser spektakuler tahun 2026.
-                        Nikmati penampilan lagu-lagu terbaik bersama ribuan penonton
-                        dalam suasana yang meriah.
+                        Dewa 19 kembali menggelar konser spektakuler pada tahun 2024.
+                        Nikmati penampilan lagu-lagu hits legendaris seperti Kangen,
+                        Roman Picisan, Risalah Hati, dan Pupus bersama ribuan Baladewa
+                        dalam suasana yang meriah dan penuh nostalgia.
 
                     </p>
 

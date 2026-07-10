@@ -23,7 +23,15 @@ Route::get('/beli-ticket', function () {
     return view('ticket.payment');
 })->name('ticket.payment');
 
-Route::get('admin', function () {
+Route::get('/invoice', function () {
+    return view('ticket.invoice');
+})->name('ticket.invoice');
+
+Route::get('/e-ticket', function () {
+    return view('ticket.e-ticket');
+})->name('ticket.e-ticket');
+
+Route::get('/admin', function () {
     return view('admin.index');
 })->name('admin.index');
 

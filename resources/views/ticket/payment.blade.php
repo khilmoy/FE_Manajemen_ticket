@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pembelian Tiket - Rumah Ticket</title>
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+
 <body class="bg-gray-50">
 
     @include('components.navbar')
@@ -44,32 +47,28 @@
 
                     <div class="border-t border-primary-200 pt-3 mt-3 flex justify-between">
                         <span class="font-bold">Total Bayar</span>
-                        <span class="font-bold text-primary-600">Rp500.000</span>
+                        <span class="font-bold text-primary-600">
+                            Rp500.000
+                        </span>
                     </div>
                 </div>
 
                 <!-- Upload Pembayaran -->
-                <form action="#" method="POST" enctype="multipart/form-data">
-                    @csrf
+                <form action="{{ route('ticket.invoice') }}" method="GET">
 
                     <label class="block font-semibold text-gray-700 mb-3">
                         Upload Bukti Pembayaran
                     </label>
 
-                    <input 
-                        type="file"
-                        name="payment_proof"
-                        accept="image/*"
-                        class="w-full border border-primary-200 rounded-xl p-3 mb-6 
-                        focus:outline-none focus:ring-2 focus:ring-primary-500" required
-                    >
+                    <input type="file" name="payment_proof" accept="image/*"
+                        class="w-full border border-primary-200 rounded-xl p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        required>
 
-                    <button
-                        type="submit"
-                        class="w-full bg-secondary-600 hover:bg-secondary-700 
-                        text-white font-bold py-4 rounded-xl transition">
+                    <button type="submit"
+                        class="w-full bg-secondary-600 hover:bg-secondary-700 text-white font-bold py-4 rounded-xl transition">
                         Kirim Pembayaran
                     </button>
+
                 </form>
 
             </div>
@@ -81,4 +80,5 @@
     @include('components.footer')
 
 </body>
+
 </html>
