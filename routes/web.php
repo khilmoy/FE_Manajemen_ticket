@@ -23,4 +23,8 @@ Route::get('/beli-ticket', function () {
     return view('ticket.payment');
 })->name('ticket.payment');
 
+Route::get('admin', function () {
+    return view('admin.index');
+})->name('admin.index');
+
 require __DIR__.'/auth.php';

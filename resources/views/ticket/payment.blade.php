@@ -61,7 +61,7 @@
                         name="payment_proof"
                         accept="image/*"
                         class="w-full border border-primary-200 rounded-xl p-3 mb-6 
-                        focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        focus:outline-none focus:ring-2 focus:ring-primary-500" required
                     >
 
                     <button
