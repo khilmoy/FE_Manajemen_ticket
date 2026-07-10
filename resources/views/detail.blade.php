@@ -351,12 +351,12 @@
 
                     </div>
 
-                    <a href="{{ route('ticket.payment') }}"
+                    <button type="button" id="beliTiketBtn"
                         class="block text-center w-full mt-8 bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-xl transition">
 
                         Beli Tiket
 
-                    </a>
+                    </button>
 
                 </div>
 
@@ -367,6 +367,36 @@
     </main>
 
     @include('components.footer')
+
+    <script>
+        document.getElementById('beliTiketBtn').addEventListener('click', function () {
+            const selection = {
+                vvip: parseInt(document.getElementById('vvip-count').textContent) || 0,
+                vip: parseInt(document.getElementById('vip-count').textContent) || 0,
+                regular: parseInt(document.getElementById('regular-count').textContent) || 0,
+            };
+
+            const totalTicket = selection.vvip + selection.vip + selection.regular;
+
+            if (totalTicket === 0) {
+                alert('Pilih minimal 1 tiket terlebih dahulu.');
+                return;
+            }
+
+            // Simpan pilihan tiket sementara, supaya bisa dibaca lagi di halaman beli-ticket
+            localStorage.setItem('ticket_selection', JSON.stringify(selection));
+
+            const redirectTarget = '{{ route('ticket.payment') }}';
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                window.location.href = `/login?redirect=${encodeURIComponent(redirectTarget)}`;
+                return;
+            }
+
+            window.location.href = redirectTarget;
+        });
+    </script>
 
 </body>
 
