@@ -1,10 +1,6 @@
 <?php
 
-<<<<<<< HEAD
 use App\Http\Controllers\Admin\KategoriController;
-use App\Http\Controllers\ProfileController;
-=======
->>>>>>> c1e4de6c858c7a7f63bf57f380beac374462f266
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -39,20 +35,11 @@ Route::get('/admin', function () {
     return view('admin.dashboard');
 })->name('admin.dashboard');
 
-<<<<<<< HEAD
-// Route::get('admin/kategori', function () {
-//     return view('admin.kategori');
-// })->name('admin.kategori');
-
-// Route::get('admin/kategori/create', function () {
-//     return view('admin.kategori.create');
-// })->name('admin.kategori.create');
-
-// Route::get('admin/kategori/{id}/update', function ($id) {
-//     return view('admin.kategori.update', ['id' => $id]);
-// })->name('admin.kategori.update');
-
-// routes/web.php — di dalam grup ->prefix('admin')->name('admin.')
+/*
+|--------------------------------------------------------------------------
+| Admin Kategori
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
 Route::get('/kategori/create', [KategoriController::class, 'create'])->name('kategori.create');
@@ -61,18 +48,4 @@ Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit'])->name('ka
 Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
 Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 
-
 require __DIR__.'/auth.php';
-=======
-Route::get('/admin/kategori', function () {
-    return view('admin.kategori');
-})->name('admin.kategori');
-
-Route::get('/admin/kategori/create', function () {
-    return view('admin.kategori.create');
-})->name('admin.kategori.create');
-
-Route::get('/admin/kategori/{id}/update', function ($id) {
-    return view('admin.kategori.update', ['id' => $id]);
-})->name('admin.kategori.update');
->>>>>>> c1e4de6c858c7a7f63bf57f380beac374462f266
