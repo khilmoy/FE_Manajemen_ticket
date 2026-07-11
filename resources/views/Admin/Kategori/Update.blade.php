@@ -14,7 +14,7 @@
                <div class="alert alert-danger">{{ $errors->first() }}</div>
             @endif
 
-            <form method="POST" action="{{ route('admin.kategori.update', $kategori['id']) }}">
+            <form method="POST" action="{{ route('kategori.update', $kategori['id']) }}">
                @csrf
                @method('PUT')
 
@@ -30,7 +30,7 @@
                </div>
 
                <button type="submit" class="btn btn-primary">Update</button>
-               <a href="{{ route('admin.kategori.index') }}" class="btn btn-light">Batal</a>
+               <a href="{{ route('kategori.index') }}" class="btn btn-light">Batal</a>
             </form>
          </div>
       </div>
