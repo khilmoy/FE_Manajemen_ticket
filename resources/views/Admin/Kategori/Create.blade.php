@@ -14,7 +14,7 @@
                <div class="alert alert-danger">{{ $errors->first() }}</div>
             @endif
 
-            <form method="POST" action="{{ route('admin.kategori.store') }}">
+            <form method="POST" action="{{ route('kategori.store') }}">
                @csrf
 
                <div class="mb-3">
@@ -29,7 +29,7 @@
                </div>
 
                <button type="submit" class="btn btn-primary">Simpan</button>
-               <a href="{{ route('admin.kategori.index') }}" class="btn btn-light">Batal</a>
+               <a href="{{ route('kategori.index') }}" class="btn btn-light">Batal</a>
             </form>
          </div>
       </div>

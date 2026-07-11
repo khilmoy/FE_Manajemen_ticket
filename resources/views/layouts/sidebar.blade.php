@@ -2,7 +2,7 @@
 <div class="leftside-menu" style="background:#3b82f6 !important; color:#fff !important;">
 
    <!-- Logo -->
-   <a href="{{ route('admin.dashboard') }}"
+   <a href=""
       class="logo logo-light d-flex align-items-center ms-3 text-decoration-none"
       style="background:#3b82f6 !important; color:#fff !important; height:70px;">
 
@@ -48,7 +48,7 @@
          </li>
 
          <li class="side-nav-item">
-            <a href="{{ route('admin.kategori') }}"
+            <a href="{{ route('kategori.index') }}"
                class="side-nav-link"
                style="color:#fff !important;">
 

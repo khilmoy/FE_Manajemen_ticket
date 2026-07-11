@@ -10,9 +10,7 @@ use Illuminate\View\View;
 
 class KategoriController extends Controller
 {
-    public function __construct(private readonly ApiClient $api)
-    {
-    }
+    public function __construct(private readonly ApiClient $api) {}
 
     public function index(): View
     {
@@ -43,7 +41,7 @@ class KategoriController extends Controller
         }
 
         return redirect()
-            ->route('admin.kategori.index')
+            ->route('kategori.index')
             ->with('success', 'Kategori berhasil ditambahkan');
     }
 
@@ -52,7 +50,7 @@ class KategoriController extends Controller
         $response = $this->api->get("/kategori/{$id}");
         $kategori = $response->successful() ? $response->json() : abort(404);
 
-        return view('admin.kategori.edit', compact('kategori'));
+        return view('admin.kategori.update', compact('kategori'));
     }
 
     public function update(Request $request, int $id): RedirectResponse
@@ -71,7 +69,7 @@ class KategoriController extends Controller
         }
 
         return redirect()
-            ->route('admin.kategorid')
+            ->route('kategori.index')
             ->with('success', 'Kategori berhasil diupdate');
     }
 
@@ -84,7 +82,7 @@ class KategoriController extends Controller
         }
 
         return redirect()
-            ->route('admin.kategorid')
+            ->route('kategori.index')
             ->with('success', 'Kategori berhasil dihapus');
     }
 }

@@ -1,4 +1,3 @@
-{{-- resources/views/admin/kategori/index.blade.php --}}
 @extends('layouts.app')
 
 @section('title', 'Kategori Tiket Konser')
