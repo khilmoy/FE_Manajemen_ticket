@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.frontend')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Ticket | Rumah Ticket</title>
+@section('title', 'E-Ticket | Rumah Ticket')
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+@section('content')
 
     <style>
         @page {
@@ -50,12 +46,6 @@
             }
         }
     </style>
-
-</head>
-
-<body class="bg-primary-50">
-
-    @include('components.navbar')
 
     <div class="max-w-6xl mx-auto px-6 py-10">
 
@@ -207,8 +197,6 @@
 
     </div>
 
-    @include('components.footer')
-
     <script>
         function downloadTicket() {
             setTimeout(() => {
@@ -217,6 +205,4 @@
         }
     </script>
 
-</body>
-
-</html>
+@endsection

@@ -1,17 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.frontend')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rumah Ticket</title>
+@section('title', 'Beranda')
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-
-<body class="bg-gray-50">
-
-    <x-navbar />
+@section('content')
 
     <!-- ================= CAROUSEL ================= -->
     <section class="max-w-7xl mx-auto mt-8 px-4">
@@ -19,7 +10,7 @@
         <div class="relative overflow-hidden rounded-2xl shadow-xl">
 
             <!-- Slides -->
-            <div class="relative h-[400px]">
+            <div class="relative h-100">
 
                 <div class="carousel-slide absolute inset-0">
                     <img src="{{ asset('assets/images/banner/dewa19.png') }}" alt="Dewa 19"
@@ -130,15 +121,20 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
-            @for ($i = 1; $i <= 8; $i++)
+            @forelse ($konsers as $konser)
+
+                @php
+                    $hargaTermurah = $konser->tickets->first();
+                @endphp
+
                 <div
                     class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition duration-300">
 
-                    <!-- Placeholder Image -->
+                    <!-- Image -->
 
                     <div class="h-48 border-b border-primary-100 overflow-hidden">
 
-                        <img src="{{ asset('assets/images/banner/dewa19.png') }}" alt="Event"
+                        <img src="{{ asset('assets/images/banner/dewa19.png') }}" alt="{{ $konser->name }}"
                             class="w-full h-full object-cover">
 
                     </div>
@@ -150,12 +146,12 @@
                         <span
                             class="inline-block bg-secondary-100 text-secondary-700 text-xs font-semibold px-3 py-1 rounded-full">
 
-                            Musik
+                            {{ $konser->kategori->name ?? '-' }}
 
                         </span>
 
                         <h3 class="mt-4 text-lg font-bold text-gray-800">
-                            Dewa 19 
+                            {{ $konser->name }}
                         </h3>
 
                         <div class="mt-4 space-y-2 text-sm text-gray-500">
@@ -164,7 +160,7 @@
 
                                 <span>📍</span>
 
-                                <span>Surabaya</span>
+                                <span>{{ $konser->location }}</span>
 
                             </div>
 
@@ -172,13 +168,8 @@
 
                                 <span>📅</span>
 
-                                <span>17 November 2024</span>
+                                <span>{{ \Carbon\Carbon::parse($konser->date)->translatedFormat('d F Y') }}</span>
 
-                            </div>
-
-                            <div class="flex items-center gap-2">
-                                🕖
-                                <span>21.00 WIB</span>
                             </div>
 
                         </div>
@@ -192,12 +183,16 @@
                                 </p>
 
                                 <h4 class="text-xl font-bold text-primary-700">
-                                    Rp150.000
+                                    @if($hargaTermurah)
+                                        Rp{{ number_format($hargaTermurah->price, 0, ',', '.') }}
+                                    @else
+                                        Habis
+                                    @endif
                                 </h4>
 
                             </div>
 
-                            <a href="{{ route('detail') }}"
+                            <a href="{{ route('detail', $konser->id) }}"
                                 class="inline-block bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition">
                                 Detail
                             </a>
@@ -207,14 +202,17 @@
                     </div>
 
                 </div>
-            @endfor
+
+            @empty
+
+                <p class="text-gray-500 col-span-4 text-center py-10">
+                    Belum ada konser tersedia.
+                </p>
+
+            @endforelse
 
         </div>
 
     </section>
 
-    <x-footer />
-
-</body>
-
-</html>
+@endsection
