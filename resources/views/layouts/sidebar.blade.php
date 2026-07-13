@@ -59,13 +59,13 @@
                </span>
             </a>
          </li>
-
+         
          <li class="side-nav-item">
-            <a href="#"
+            <a href="{{ route('konser.index') }}"
                class="side-nav-link"
                style="color:#fff !important;">
 
-               <i class="uil-comments-alt" style="color:#fff !important;"></i>
+               <i class="uil uil-users-alt style="color:#fff !important;"></i>
 
                <span style="color:#fff !important;">
                   Konser

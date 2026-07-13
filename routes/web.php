@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\KategoriController;
+use App\Http\Controllers\Admin\KonserController;
+use App\Http\Controllers\Admin\TicketController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -50,5 +52,18 @@ Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('kateg
 Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 
 require __DIR__.'/auth.php';
+Route::get('/konser', [KonserController::class, 'index'])->name('konser.index');
+Route::get('/konser/create', [KonserController::class, 'create'])->name('konser.create');
+Route::post('/konser', [KonserController::class, 'store'])->name('konser.store');
+Route::get('/konser/{id}', [KonserController::class, 'show'])->name('konser.show');   
+Route::get('/konser/{id}/edit', [KonserController::class, 'edit'])->name('konser.edit');
+Route::put('/konser/{id}', [KonserController::class, 'update'])->name('konser.update');
+Route::delete('/konser/{id}', [KonserController::class, 'destroy'])->name('konser.destroy');
+
+Route::get('/konser/{konser}/ticket/create', [TicketController::class, 'create'])->name('konser.ticket.create');
+Route::post('/konser/{konser}/ticket', [TicketController::class, 'store'])->name('konser.ticket.store');
+Route::get('/konser/{konser}/ticket/{id}/edit', [TicketController::class, 'edit'])->name('konser.ticket.edit');
+Route::put('/konser/{konser}/ticket/{id}', [TicketController::class, 'update'])->name('konser.ticket.update');
+Route::delete('/konser/{konser}/ticket/{id}', [TicketController::class, 'destroy'])->name('konser.ticket.destroy');
 
 require __DIR__.'/auth.php';
