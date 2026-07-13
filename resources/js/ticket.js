@@ -1,71 +1,62 @@
-let tiket = {
+window.tiket = {
     vvip: 0,
     vip: 0,
     regular: 0
 };
 
-const harga = {
+window.harga = {
     vvip: 750000,
     vip: 500000,
     regular: 250000
 };
 
-
 window.tambahTiket = function(type) {
 
-    if (tiket[type] !== undefined) {
-        tiket[type]++;
+    if (window.tiket[type] !== undefined) {
+        window.tiket[type]++;
         updateTiket();
     }
 
 };
-
 
 window.kurangTiket = function(type) {
 
-    if (tiket[type] > 0) {
-        tiket[type]--;
+    if (window.tiket[type] > 0) {
+        window.tiket[type]--;
         updateTiket();
     }
 
 };
 
-
 function updateTiket() {
 
-    document.getElementById("vvip-count").innerHTML = tiket.vvip;
-    document.getElementById("vip-count").innerHTML = tiket.vip;
-    document.getElementById("regular-count").innerHTML = tiket.regular;
+    document.getElementById("vvip-count").innerHTML = window.tiket.vvip;
+    document.getElementById("vip-count").innerHTML = window.tiket.vip;
+    document.getElementById("regular-count").innerHTML = window.tiket.regular;
 
-
-    document.getElementById("side-vvip").innerHTML = tiket.vvip;
-    document.getElementById("side-vip").innerHTML = tiket.vip;
-    document.getElementById("side-regular").innerHTML = tiket.regular;
-
+    document.getElementById("side-vvip").innerHTML = window.tiket.vvip;
+    document.getElementById("side-vip").innerHTML = window.tiket.vip;
+    document.getElementById("side-regular").innerHTML = window.tiket.regular;
 
     document.getElementById("price-vvip").innerHTML =
-        formatRupiah(tiket.vvip * harga.vvip);
+        formatRupiah(window.tiket.vvip * window.harga.vvip);
 
     document.getElementById("price-vip").innerHTML =
-        formatRupiah(tiket.vip * harga.vip);
+        formatRupiah(window.tiket.vip * window.harga.vip);
 
     document.getElementById("price-regular").innerHTML =
-        formatRupiah(tiket.regular * harga.regular);
-
+        formatRupiah(window.tiket.regular * window.harga.regular);
 
     let total =
-        (tiket.vvip * harga.vvip) +
-        (tiket.vip * harga.vip) +
-        (tiket.regular * harga.regular) +
+        (window.tiket.vvip * window.harga.vvip) +
+        (window.tiket.vip * window.harga.vip) +
+        (window.tiket.regular * window.harga.regular) +
         5000;
-
 
     document.getElementById("total-price").innerHTML =
         formatRupiah(total);
 
 }
-
-
 
 function formatRupiah(number) {
 

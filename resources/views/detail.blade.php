@@ -369,32 +369,44 @@
     @include('components.footer')
 
     <script>
-        document.getElementById('beliTiketBtn').addEventListener('click', function () {
-            const selection = {
-                vvip: parseInt(document.getElementById('vvip-count').textContent) || 0,
-                vip: parseInt(document.getElementById('vip-count').textContent) || 0,
-                regular: parseInt(document.getElementById('regular-count').textContent) || 0,
-            };
+        document.getElementById('beliTiketBtn').addEventListener('click', function() {
 
-            const totalTicket = selection.vvip + selection.vip + selection.regular;
+            let jenis = '';
+            let jumlah = 0;
+            let total = 5000;
 
-            if (totalTicket === 0) {
-                alert('Pilih minimal 1 tiket terlebih dahulu.');
+            if (window.tiket.vvip > 0) {
+                jenis = 'VVIP';
+                jumlah = window.tiket.vvip;
+                total += window.tiket.vvip * window.harga.vvip;
+            }
+
+            if (window.tiket.vip > 0) {
+                jenis = 'VIP';
+                jumlah = window.tiket.vip;
+                total += window.tiket.vip * window.harga.vip;
+            }
+
+            if (window.tiket.regular > 0) {
+                jenis = 'Regular';
+                jumlah = window.tiket.regular;
+                total += window.tiket.regular * window.harga.regular;
+            }
+
+            if (jumlah === 0) {
+                alert('Silakan pilih minimal 1 tiket.');
                 return;
             }
 
-            // Simpan pilihan tiket sementara, supaya bisa dibaca lagi di halaman beli-ticket
-            localStorage.setItem('ticket_selection', JSON.stringify(selection));
+            localStorage.setItem('orderData', JSON.stringify({
+                vvip: tiket.vvip,
+                vip: tiket.vip,
+                regular: tiket.regular,
+                total: total
+            }));
 
-            const redirectTarget = '{{ route('ticket.payment') }}';
-            const token = localStorage.getItem('token');
+            window.location.href = "{{ route('ticket.payment') }}";
 
-            if (!token) {
-                window.location.href = `/login?redirect=${encodeURIComponent(redirectTarget)}`;
-                return;
-            }
-
-            window.location.href = redirectTarget;
         });
     </script>
 

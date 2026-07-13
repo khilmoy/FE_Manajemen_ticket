@@ -1,10 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\KategoriController;
-<<<<<<< HEAD
-=======
 use App\Http\Controllers\ProfileController;
->>>>>>> d741d418c5c15e22bd1adfa6fadc9aca9faaa2de
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -39,15 +36,12 @@ Route::get('/admin', function () {
     return view('admin.dashboard');
 })->name('admin.dashboard');
 
-<<<<<<< HEAD
 /*
 |--------------------------------------------------------------------------
 | Admin Kategori
 |--------------------------------------------------------------------------
 */
 
-=======
->>>>>>> d741d418c5c15e22bd1adfa6fadc9aca9faaa2de
 Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
 Route::get('/kategori/create', [KategoriController::class, 'create'])->name('kategori.create');
 Route::post('/kategori', [KategoriController::class, 'store'])->name('kategori.store');
@@ -55,9 +49,6 @@ Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit'])->name('ka
 Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
 Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 
-<<<<<<< HEAD
 require __DIR__.'/auth.php';
-=======
 
 require __DIR__.'/auth.php';
->>>>>>> d741d418c5c15e22bd1adfa6fadc9aca9faaa2de
