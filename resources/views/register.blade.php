@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -65,8 +65,10 @@
 
                 </div>
 
-                <form action="{{ route('register') }}" method="POST" class="mt-8 space-y-6">
-                    @csrf
+                <!-- Alert error -->
+                <div id="alertError" class="hidden mb-4 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600"></div>
+
+                <form id="registerForm" class="mt-8 space-y-6">
 
                     <!-- Nama -->
                     <div>
@@ -78,7 +80,7 @@
                         <input
                             type="text"
                             name="name"
-                            value="{{ old('name') }}"
+                            required
                             placeholder="Masukkan nama lengkap"
                             class="w-full rounded-xl border border-gray-300 focus:border-primary-600 focus:ring-2 focus:ring-primary-200 px-4 py-3 outline-none transition">
 
@@ -94,7 +96,7 @@
                         <input
                             type="email"
                             name="email"
-                            value="{{ old('email') }}"
+                            required
                             placeholder="Masukkan email"
                             class="w-full rounded-xl border border-gray-300 focus:border-primary-600 focus:ring-2 focus:ring-primary-200 px-4 py-3 outline-none transition">
 
@@ -110,7 +112,26 @@
                         <input
                             type="password"
                             name="password"
+                            required
+                            autocomplete="new-password"
                             placeholder="Masukkan password"
+                            class="w-full rounded-xl border border-gray-300 focus:border-primary-600 focus:ring-2 focus:ring-primary-200 px-4 py-3 outline-none transition">
+
+                    </div>
+
+                    <!-- Konfirmasi Password -->
+                    <div>
+
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Konfirmasi Password
+                        </label>
+
+                        <input
+                            type="password"
+                            name="password_confirmation"
+                            required
+                            autocomplete="new-password"
+                            placeholder="Ulangi password"
                             class="w-full rounded-xl border border-gray-300 focus:border-primary-600 focus:ring-2 focus:ring-primary-200 px-4 py-3 outline-none transition">
 
                     </div>
@@ -118,7 +139,8 @@
                     <!-- Button -->
                     <button
                         type="submit"
-                        class="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 rounded-xl transition">
+                        id="registerButton"
+                        class="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 rounded-xl transition disabled:opacity-60 disabled:cursor-not-allowed">
 
                         Daftar
 
@@ -170,6 +192,61 @@
         </div>
 
     </div>
+
+    <script>
+        const API_URL = '{{ config('global.api_url', 'http://localhost:8001/api') }}';
+
+        document.getElementById('registerForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const button = document.getElementById('registerButton');
+    const alertBox = document.getElementById('alertError');
+
+    const name = this.name.value.trim();
+    const email = this.email.value.trim();
+    const password = this.password.value;
+    const password_confirmation = this.password_confirmation.value;
+
+    alertBox.classList.add('hidden');
+    alertBox.textContent = '';
+
+    button.disabled = true;
+    button.textContent = 'Memproses...';
+
+    try {
+        const response = await fetch(`${API_URL}/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({ name, email, password, password_confirmation }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            const message = data.errors
+                ? Object.values(data.errors).flat().join(' ')
+                : (data.message || 'Registrasi gagal. Periksa kembali data kamu.');
+
+            alertBox.textContent = message;
+            alertBox.classList.remove('hidden');
+            return;
+        }
+
+
+        window.location.href = '{{ route('login') }}?registered=1';
+
+    } catch (err) {
+        alertBox.textContent = 'Tidak bisa terhubung ke server. Coba lagi.';
+        alertBox.classList.remove('hidden');
+    } finally {
+        button.disabled = false;
+        button.textContent = 'Daftar';
+    }
+});
+    </script>
 
 </body>
 
