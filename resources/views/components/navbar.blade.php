@@ -15,21 +15,6 @@
                 </div>
             </a>
 
-            <!-- Menu -->
-            <div class="hidden md:flex items-center space-x-8">
-                <a href="{{ url('/') }}" class="text-white hover:text-primary-100 font-medium transition">
-                    Beranda
-                </a>
-
-                <a href="{{ url('/konser') }}" class="text-white hover:text-primary-100 font-medium transition">
-                    Konser
-                </a>
-
-                <a href="{{ url('/kategori') }}" class="text-white hover:text-primary-100 font-medium transition">
-                    Kategori
-                </a>
-            </div>
-
             <!-- Login -->
             @guest
                 <a href="{{ route('login') }}"
