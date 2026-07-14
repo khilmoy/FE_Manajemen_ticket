@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 
 class ApiClient
@@ -16,7 +17,8 @@ class ApiClient
 
     protected function client(): PendingRequest
     {
-        $request = Http::baseUrl($this->baseUrl)->acceptJson();
+        $request = Http::baseUrl($this->baseUrl)
+            ->acceptJson();
 
         if (session()->has('api_token')) {
             $request = $request->withToken(session('api_token'));
@@ -33,6 +35,53 @@ class ApiClient
     public function post(string $endpoint, array $data = [])
     {
         return $this->client()->post($endpoint, $data);
+    }
+
+    /**
+     * Upload file (POST)
+     */
+    public function postMultipart(
+        string $endpoint,
+        array $data = [],
+        ?UploadedFile $file = null,
+        string $field = 'image'
+    ) {
+        $request = $this->client();
+
+        if ($file instanceof UploadedFile) {
+            $request = $request->attach(
+                $field,
+                file_get_contents($file->getRealPath()),
+                $file->getClientOriginalName()
+            );
+        }
+
+        return $request->post($endpoint, $data);
+    }
+
+    /**
+     * Upload file (PUT)
+     */
+    
+    public function putMultipart(
+        string $endpoint,
+        array $data = [],
+        ?UploadedFile $file = null,
+        string $field = 'image'
+    ) {
+        $request = $this->client();
+
+        $data['_method'] = 'PUT';
+
+        if ($file instanceof UploadedFile) {
+            $request = $request->attach(
+                $field,
+                file_get_contents($file->getRealPath()),
+                $file->getClientOriginalName()
+            );
+        }
+
+        return $request->post($endpoint, $data); 
     }
 
     public function patch(string $endpoint, array $data = [])

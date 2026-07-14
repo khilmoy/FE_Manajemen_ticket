@@ -3,6 +3,8 @@
 use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\Admin\KonserController;
 use App\Http\Controllers\Admin\TicketController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DetailController;
@@ -24,16 +26,12 @@ Route::get('/beli-ticket', function () {
     return view('ticket.payment');
 })->name('ticket.payment');
 
-Route::get('/invoice', function () {
-    return view('ticket.invoice');
-})->name('ticket.invoice');
-
-Route::get('/e-ticket', function () {
-    return view('ticket.e-ticket');
-})->name('ticket.e-ticket');
+// Invoice & E-Ticket sekarang butuh order id (data diambil dari API)
+Route::get('/order/{id}', [OrderController::class, 'show'])->name('ticket.invoice');
+Route::get('/order/{id}/e-ticket', [OrderController::class, 'eTicket'])->name('ticket.e-ticket');
 
 Route::get('/admin', function () {
-    return view('admin.dashboard');
+    return view('Admin.dashboard');
 })->name('admin.dashboard');
 
 /*
@@ -64,3 +62,8 @@ Route::post('/konser/{konser}/ticket', [TicketController::class, 'store'])->name
 Route::get('/konser/{konser}/ticket/{id}/edit', [TicketController::class, 'edit'])->name('konser.ticket.edit');
 Route::put('/konser/{konser}/ticket/{id}', [TicketController::class, 'update'])->name('konser.ticket.update');
 Route::delete('/konser/{konser}/ticket/{id}', [TicketController::class, 'destroy'])->name('konser.ticket.destroy');
+
+// Admin: dashboard approve/reject
+Route::get('/admin/order', [AdminOrderController::class, 'adminIndex'])->name('admin.order.index');
+Route::post('/admin/order/{id}/approve', [AdminOrderController::class, 'approve'])->name('admin.order.approve');
+Route::post('/admin/order/{id}/reject', [AdminOrderController::class, 'reject'])->name('admin.order.reject');

@@ -189,11 +189,17 @@
                     return;
                 }
 
-                // Simpan token & data user untuk request selanjutnya
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
 
-                window.location.href = '{{ url('/detail') }}';
+                const params = new URLSearchParams(window.location.search);
+                let redirectTo = params.get('redirect') || '/';
+
+                if (!redirectTo.startsWith('/')) {
+                    redirectTo = '/';
+                }
+
+                window.location.href = redirectTo;
 
             } catch (err) {
                 alertBox.textContent = 'Tidak bisa terhubung ke server. Coba lagi.';

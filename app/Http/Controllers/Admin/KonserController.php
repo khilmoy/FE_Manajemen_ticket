@@ -10,16 +10,17 @@ use Illuminate\View\View;
 
 class KonserController extends Controller
 {
-    public function __construct(private readonly ApiClient $api)
-    {
-    }
+    public function __construct(private readonly ApiClient $api) {}
 
     public function index(): View
     {
         $response = $this->api->get('/konsers');
-        $konsers  = $response->successful() ? $response->json() : [];
+        $konsers = $response->successful() ? $response->json() : [];
+ 
+        $orderResponse = $this->api->get('/orders');
+        $orders = $orderResponse->successful() ? $orderResponse->json() : [];
 
-        return view('admin.konser.index', compact('konsers'));
+        return view('Admin.Konser.index', compact('konsers', 'orders'));
     }
 
     public function create(): View
@@ -27,61 +28,71 @@ class KonserController extends Controller
         $response = $this->api->get('/kategori');
         $kategori = $response->successful() ? $response->json() : [];
 
-        return view('admin.konser.create', compact('kategori'));
+        return view('Admin.Konser.create', compact('kategori'));
     }
 
     /**
-     * Simpan Konser + Tiket sekaligus dari 1 form.
-     * Tetap 2 request terpisah ke BE (KonserController & TicketController BE tidak digabung),
-     * cuma alurnya dirangkai di sini.
+     * Simpan Konser + Tiket sekaligus.
      */
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'kategori_id'  => 'required|integer',
-            'name'         => 'required|string|max:255',
-            'date'         => 'required|date',
-            'location'     => 'required|string|max:255',
-            'description'  => 'nullable|string',
+            'kategori_id' => 'required|integer',
+            'name'        => 'required|string|max:255',
+            'date'        => 'required|date',
+            'location'    => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
 
-            // field tiket, digabung di form yang sama
-            'ticket_name'  => 'required|string|max:255',
-            'price'        => 'required|numeric|min:0',
-            'stock'        => 'required|integer|min:0',
+            // Tiket
+            'ticket_name' => 'required|string|max:255',
+            'price'       => 'required|numeric|min:0',
+            'stock'       => 'required|integer|min:0',
         ]);
 
-        // 1. Simpan konser dulu
-        $konserResponse = $this->api->post('/konsers', $request->only(
-            'kategori_id', 'name', 'date', 'location', 'description'
-        ));
+        // Simpan konser
+        $konserResponse = $this->api->postMultipart(
+            '/konsers',
+            [
+                'kategori_id' => $request->kategori_id,
+                'name'        => $request->name,
+                'date'        => $request->date,
+                'location'    => $request->location,
+                'description' => $request->description,
+            ],
+            $request->file('image')
+        );
 
         if ($konserResponse->failed()) {
             return back()
                 ->withInput()
-                ->withErrors(['name' => $konserResponse->json('message') ?? 'Gagal menyimpan konser']);
+                ->withErrors([
+                    'name' => $konserResponse->json('message') ?? 'Gagal menyimpan konser'
+                ]);
         }
 
         $konser = $konserResponse->json();
 
-        // 2. Simpan tiket, pakai konser_id yang baru dibuat
+        // Simpan tiket
         $ticketResponse = $this->api->post('/tickets', [
             'konser_id'   => $konser['id'],
-            'ticket_name' => $request->input('ticket_name'),
-            'price'       => $request->input('price'),
-            'stock'       => $request->input('stock'),
+            'ticket_name' => $request->ticket_name,
+            'price'       => $request->price,
+            'stock'       => $request->stock,
         ]);
 
         if ($ticketResponse->failed()) {
-            // Konser sudah kebuat tapi tiketnya gagal — beri tahu user, tapi tetap arahkan ke detail
-            // supaya bisa nambah tiket manual lewat halaman show.
             return redirect()
                 ->route('konser.show', $konser['id'])
-                ->withErrors(['ticket_name' => $ticketResponse->json('message') ?? 'Konser tersimpan, tapi tiket gagal disimpan. Silakan tambah manual.']);
+                ->withErrors([
+                    'ticket_name' => $ticketResponse->json('message')
+                        ?? 'Konser berhasil disimpan, tetapi tiket gagal ditambahkan.'
+                ]);
         }
 
         return redirect()
             ->route('konser.index')
-            ->with('success', 'Konser dan tiket berhasil ditambahkan');
+            ->with('success', 'Konser dan tiket berhasil ditambahkan.');
     }
 
     public function show(int $id): View
@@ -93,9 +104,14 @@ class KonserController extends Controller
         }
 
         $ticketsResponse = $this->api->get('/tickets');
-        $allTickets      = $ticketsResponse->successful() ? $ticketsResponse->json() : [];
+        $allTickets = $ticketsResponse->successful()
+            ? $ticketsResponse->json()
+            : [];
 
-        $tickets = array_values(array_filter($allTickets, fn ($t) => $t['konser_id'] === $id));
+        $tickets = array_values(array_filter(
+            $allTickets,
+            fn($ticket) => $ticket['konser_id'] == $id
+        ));
 
         $konser = $konserResponse->json();
 
@@ -112,8 +128,10 @@ class KonserController extends Controller
 
         $kategoriResponse = $this->api->get('/kategori');
 
-        $konser   = $konserResponse->json();
-        $kategori = $kategoriResponse->successful() ? $kategoriResponse->json() : [];
+        $konser = $konserResponse->json();
+        $kategori = $kategoriResponse->successful()
+            ? $kategoriResponse->json()
+            : [];
 
         return view('admin.konser.edit', compact('konser', 'kategori'));
     }
@@ -126,21 +144,32 @@ class KonserController extends Controller
             'date'        => 'required|date',
             'location'    => 'required|string|max:255',
             'description' => 'nullable|string',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $response = $this->api->put("/konsers/{$id}", $request->only(
-            'kategori_id', 'name', 'date', 'location', 'description'
-        ));
+        $response = $this->api->putMultipart(
+            "/konsers/{$id}",
+            [
+                'kategori_id' => $request->kategori_id,
+                'name'        => $request->name,
+                'date'        => $request->date,
+                'location'    => $request->location,
+                'description' => $request->description,
+            ],
+            $request->file('image')
+        );
 
         if ($response->failed()) {
             return back()
                 ->withInput()
-                ->withErrors(['name' => $response->json('message') ?? 'Gagal mengupdate konser']);
+                ->withErrors([
+                    'name' => $response->json('message') ?? 'Gagal mengupdate konser'
+                ]);
         }
 
         return redirect()
             ->route('konser.index')
-            ->with('success', 'Konser berhasil diupdate');
+            ->with('success', 'Konser berhasil diupdate.');
     }
 
     public function destroy(int $id): RedirectResponse
@@ -148,11 +177,13 @@ class KonserController extends Controller
         $response = $this->api->delete("/konsers/{$id}");
 
         if ($response->failed()) {
-            return back()->withErrors(['delete' => $response->json('message') ?? 'Gagal menghapus konser']);
+            return back()->withErrors([
+                'delete' => $response->json('message') ?? 'Gagal menghapus konser'
+            ]);
         }
 
         return redirect()
             ->route('konser.index')
-            ->with('success', 'Konser berhasil dihapus');
+            ->with('success', 'Konser berhasil dihapus.');
     }
 }

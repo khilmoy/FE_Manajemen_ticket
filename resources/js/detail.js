@@ -41,6 +41,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         localStorage.setItem("orderData", JSON.stringify(orderData));
 
+        // Cek login dulu. Kalau belum login, requireAuth() otomatis
+        // redirect ke /login?redirect=/beli-ticket dan return null.
+        const token = window.requireAuth('/beli-ticket');
+        if (!token) return;
+
         window.location.href = "/beli-ticket";
 
     });

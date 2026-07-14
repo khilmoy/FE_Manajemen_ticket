@@ -221,10 +221,32 @@
                 updateSidebar();
             }
         }
+
+        document.getElementById('beliTiketBtn').addEventListener('click', function() {
+            const selected = Object.entries(window.tiket).filter(([, qty]) => qty > 0);
+
+            if (selected.length === 0) {
+                alert('Pilih minimal 1 tiket terlebih dahulu.');
+                return;
+            }
+
+            if (selected.length > 1) {
+                alert('Saat ini pembelian hanya bisa untuk satu jenis tiket dalam satu transaksi.');
+                return;
+            }
+
+            const [ticketId, qty] = selected[0];
+
+            const orderData = {
+                ticket_id: Number(ticketId),
+                ticket_name: window.nama[ticketId],
+                price: window.harga[ticketId],
+                qty: Number(qty),
+            };
+
+            localStorage.setItem('orderData', JSON.stringify(orderData));
+
+            window.location.href = "{{ route('ticket.payment') }}";
+        });
     </script>
-
-    @vite('resources/js/detail.js')
-
-    @vite(['resources/js/detail.js'])
-
 @endsection

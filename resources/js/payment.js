@@ -9,6 +9,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================
     // AMBIL DATA ORDER
     // ==========================
+    // Struktur yang dibutuhkan:
+    // {
+    //   tickets: [ { id: 3, name: 'VVIP', price: 750000, qty: 2 }, ... ],
+    //   total: 1505000
+    // }
+    // PENTING: field "id" di setiap tiket harus berisi ticket_id ASLI dari
+    // database (tabel tickets), bukan label kategori. Ini wajib disiapkan
+    // dari halaman detail konser saat menyimpan ke localStorage.
     let order = null;
 
     try {
@@ -17,14 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
         order = null;
     }
 
-    // Validasi struktur data
     if (!order || !Array.isArray(order.tickets) || order.tickets.length === 0) {
-
-        localStorage.removeItem('orderData'); // bersihkan data basi
+        localStorage.removeItem('orderData');
         alert("Data pesanan tidak ditemukan. Silakan pilih tiket terlebih dahulu.");
-        window.location.href = "/"; // atau ke halaman daftar konser
+        window.location.href = "/";
         return;
-
     }
 
     let html = "";
@@ -73,38 +78,54 @@ document.addEventListener('DOMContentLoaded', () => {
         button.disabled = true;
         button.textContent = "Mengirim...";
 
-        const formData = new FormData();
-        formData.append('payment_proof', fileInput.files[0]);
-        formData.append('tickets', JSON.stringify(order.tickets));
-        formData.append('total_price', order.total);
-
         try {
 
-            const response = await fetch(`${API_URL}/order/payment-proof`, {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: formData
-            });
+            const createdOrderIds = [];
 
-            const data = await response.json();
+            // 1 order = 1 ticket_id, jadi kirim satu-satu per jenis tiket
+            for (const ticket of order.tickets) {
 
-            if (!response.ok) {
-                const message = data.errors
-                    ? Object.values(data.errors).flat().join(' ')
-                    : (data.message || "Gagal mengirim pembayaran.");
-                alertBox.textContent = message;
-                alertBox.classList.remove('hidden');
-                return;
+                if (!ticket.id) {
+                    throw new Error(`ticket_id untuk "${ticket.name}" tidak ditemukan. Cek data dari halaman detail.`);
+                }
+
+                const formData = new FormData();
+                formData.append('ticket_id', ticket.id);
+                formData.append('quantity', ticket.qty);
+                formData.append('image', fileInput.files[0]);
+
+                const response = await fetch(`${API_URL}/orders`, {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    const message = data.errors
+                        ? Object.values(data.errors).flat().join(' ')
+                        : (data.message || "Gagal mengirim pembayaran.");
+                    alertBox.textContent = message;
+                    alertBox.classList.remove('hidden');
+                    button.disabled = false;
+                    button.textContent = "Kirim Pembayaran";
+                    return;
+                }
+
+                createdOrderIds.push(data.id);
             }
 
             localStorage.removeItem('orderData');
-            window.location.href = "/invoice";
+
+            // Redirect ke halaman status order
+            window.location.href = "/order/" + createdOrderIds[0];
 
         } catch (error) {
-            alertBox.textContent = "Tidak dapat terhubung ke server.";
+            alertBox.textContent = error.message || "Tidak dapat terhubung ke server.";
             alertBox.classList.remove('hidden');
         } finally {
             button.disabled = false;
