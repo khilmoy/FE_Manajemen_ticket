@@ -42,7 +42,7 @@ class KonserController extends Controller
             'date'        => 'required|date',
             'location'    => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
 
             // Tiket
             'ticket_name' => 'required|string|max:255',
@@ -144,7 +144,7 @@ class KonserController extends Controller
             'date'        => 'required|date',
             'location'    => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
         ]);
 
         $response = $this->api->putMultipart(
