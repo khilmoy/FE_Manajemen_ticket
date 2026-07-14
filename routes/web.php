@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DetailController;
+use App\Http\Controllers\SessionTokenController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -29,6 +30,10 @@ Route::get('/beli-ticket', function () {
 // Invoice & E-Ticket sekarang butuh order id (data diambil dari API)
 Route::get('/order/{id}', [OrderController::class, 'show'])->name('ticket.invoice');
 Route::get('/order/{id}/e-ticket', [OrderController::class, 'eTicket'])->name('ticket.e-ticket');
+
+// Simpan token BE (dari login JS) ke session Laravel FE,
+// supaya ApiClient (server-side, dipakai admin panel) bisa memakainya.
+Route::post('/set-api-token', [SessionTokenController::class, 'store'])->name('session.token.store');
 
 Route::get('/admin', function () {
     return view('Admin.dashboard');

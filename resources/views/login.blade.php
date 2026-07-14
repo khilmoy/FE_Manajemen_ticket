@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Login | Rumah Ticket</title>
 
@@ -151,6 +152,7 @@
 
     <script>
         const API_URL = '{{ config('global.api_url', 'http://localhost:8001/api') }}';
+        const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
@@ -191,6 +193,19 @@
 
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
+
+                // Simpan juga token ini ke session Laravel FE,
+                // supaya ApiClient (server-side, dipakai admin panel)
+                // ikut bisa memakai token yang sama.
+                await fetch('/set-api-token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': CSRF_TOKEN,
+                    },
+                    body: JSON.stringify({ token: data.token }),
+                });
 
                 const params = new URLSearchParams(window.location.search);
                 let redirectTo = params.get('redirect') || '/';
